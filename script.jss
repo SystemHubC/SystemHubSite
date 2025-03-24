@@ -1,4 +1,4 @@
-function goToHome() {
+sfunction goToHome() {
     document.getElementById('main-content').querySelectorAll('section').forEach(section => section.style.display = 'none');
     document.getElementById('home').style.display = 'block';
 }
