@@ -3,76 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Hub</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Запуск сайта через 24 часа</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .timer {
+            font-size: 5em;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .launch-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            background: #ff4081;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+            display: none; /* Скрыто изначально */
+        }
+
+        .launch-button:hover {
+            background: #ff79b0;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="logo" onclick="goToHome()">System Hub</div>
-        <nav>
-            <ul>
-                <li onclick="showFunctions()">Функции</li>
-                <li onclick="showSupportedPlaces()">Поддерживаемые плейсы</li>
-                <li onclick="showSocials()">Наши соцсети</li>
-                <li onclick="showGoals()">Наши цели</li>
-            </ul>
-        </nav>
-    </header>
-
-    <main id="main-content">
-        <section id="home">
-            <h1>System Hub</h1>
-            <p>Лучший клиент для комфортной игры в Роблокс</p>
-            <button class="red-button" onclick="tryNow()">Попробовать сейчас!</button>
-            <button class="white-button" onclick="moreInfo()">Подробнее</button>
-        </section>
-
-        <section id="functions" style="display:none;">
-            <h2>Что мы имеем</h2>
-            <div>
-                <h3>Быстрая поддержка</h3>
-                <p>Мы быстро и отзывчиво отвечаем на вопросы наших пользователей.</p>
-                <h3>Регулярные обновления для скриптов</h3>
-                <p>Мы стараемся как можно быстрее выпускать обновления и функции, которые вам помогут в играх.</p>
-                <h3>Анти детект</h3>
-                <p>Данные скрипты невозможно задетектить, чем самим снижая риск бана за клиент.</p>
-                <h3>И много всего другого у нас!</h3>
-            </div>
-        </section>
-
-        <section id="supported-places" style="display:none;">
-            <h2>Поддерживаемые плейсы</h2>
-            <div>
-                <img src="banner1.png" alt="Banner 1" onclick="copyScript('script1')">
-                <img src="banner2.png" alt="Banner 2" onclick="copyScript('script2')">
-            </div>
-        </section>
-
-        <section id="socials" style="display:none;">
-            <h2>Наши соцсети</h2>
-            <button onclick="copyDiscordLink()">Discord</button>
-            <button onclick="copyEmailLink()">Почта</button>
-        </section>
-
-        <section id="goals" style="display:none;">
-            <h2>Наши цели</h2>
-            <ul>
-                <li>Запустить первый скрипт - Готово</li>
-                <li>Создать свой Discord сервер - Принято</li>
-                <li>Создать свой сайт - Принято</li>
-                <li>Создать свой собственный скрипт хаб - В разработке</li>
-                <li>Дойти до цели сто участников в Discord сервере - В разработке</li>
-                <li>Скоро будет...</li>
-            </ul>
-        </section>
-    </main>
-
-    <div id="popup" class="popup" style="display:none;">
-        <h3 id="popup-title"></h3>
-        <p id="popup-message"></p>
-        <button onclick="closePopup()">Окей</button>
+    <div class="container">
+        <h1>Сайт запускается через:</h1>
+        <div class="timer" id="countdown">24:00:00</div>
+        <button class="launch-button" id="launchButton">Запустить сайт</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const countdownElement = document.getElementById('countdown');
+        const launchButton = document.getElementById('launchButton');
+
+        // Устанавливаем время окончания через 24 часа
+        const endTime = Date.now() + 24 * 60 * 60 * 1000;
+
+        const interval = setInterval(() => {
+            const now = Date.now();
+            const remainingTime = endTime - now;
+
+            if (remainingTime <= 0) {
+                clearInterval(interval);
+                countdownElement.textContent = "Время вышло!";
+                launchButton.style.display = 'block';
+                return;
+            }
+
+            const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
+            const seconds = Math.floor((remainingTime / 1000) % 60);
+
+            countdownElement.textContent = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+        }, 1000);
+    </script>
 </body>
 </html>
